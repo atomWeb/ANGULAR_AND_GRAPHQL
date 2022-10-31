@@ -1,9 +1,13 @@
 import express, { Application } from "express";
 import { ApolloServer } from "apollo-server-express";
 import casual from "casual";
-import cors from 'cors'; 
+import cors from "cors";
 import schema from "./graphql/schema";
+import "reflect-metadata";
+import { createConnection, Connection } from "typeorm";
+import dotenv from "dotenv";
 
+dotenv.config({ path: __dirname + "/.env" });
 
 let postsIds: string[] = [];
 let usersIds: string[] = [];
@@ -60,14 +64,19 @@ const mocks = {
   }),
 };
 
+const connection: Promise<Connection> = createConnection();
+connection
+  .then(() => {
+    startApolloServer();
+  })
+  .catch((error) => console.log("Database connection error:", error));
+
 async function startApolloServer() {
   const PORT = 8080;
   const app: Application = express();
-  app.use(cors()); 
+  app.use(cors());
   const server: ApolloServer = new ApolloServer({
     schema,
-    mocks,
-    mockEntireSchema: false,
   });
   await server.start();
   server.applyMiddleware({
@@ -78,4 +87,3 @@ async function startApolloServer() {
     console.log("Server is running at http://localhost:${PORT}");
   });
 }
-startApolloServer();
