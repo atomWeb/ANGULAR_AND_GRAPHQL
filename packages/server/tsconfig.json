@@ -8,6 +8,16 @@
     "strict": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": false
-  }
+    "strictPropertyInitialization": false,
+    "paths": {
+      "@ngsocial/graphql": [
+        "../graphql-types/src"
+      ]
+    }
+  },
+  "references": [
+    {
+      "path": "../graphql-types"
+    }
+  ]
 }
